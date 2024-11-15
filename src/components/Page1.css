@@ -1,0 +1,37 @@
+.dm-serif-text-regular {
+    font-family: "DM Serif Text", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .dm-serif-text-regular-italic {
+    font-family: "DM Serif Text", serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  .radley-regular {
+    font-family: "Radley", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .radley-regular-italic {
+    font-family: "Radley", serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  
+
+
+
+.rightfont{
+
+font-family:dm-serif-text-regular ;
+
+
+
+}
+.left{
+    font-family:radley-regular;
+}

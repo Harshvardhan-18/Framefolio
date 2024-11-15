@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  .main {
+    background: url('editing.jpg') no-repeat center center/cover;
+    height: 100vh;
+     /* Replace 'your-image-path.jpg' with your background image */
+  }
+  .smol{
+    position: relative;
+    height: 450vh;
+    
+  }
+  
+  .navbar1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+    position: sticky;
+    z-index: 10;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 73%;
+    border-radius: 50px; /* Rounded navbar */
+    width: 50%; /* Adjust this as needed */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+  }
+  
+  
+  .logo {
+    font-size: 28px;
+    font-weight: 600;
+    font-family:'Times New Roman', Times, serif;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 80px; /* Space between the navigation links */
+  }
+  
+  .nav-links li {
+    margin: 0;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 550;
+  }
+  
+  .get-started-btn {
+    background-color: #504747d7;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 21px;
+    font-weight: 600;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    cursor: pointer;
+  }
+  
+  .get-started-btn:hover {
+    background-color: #0056b3;
+  }
+  .about{
+    background: url('write.jpg') no-repeat center center/cover;
+  }
+  .botbtn{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }

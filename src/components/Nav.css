@@ -1,0 +1,64 @@
+.modal-overlay {
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:#8697c4; /* Dark overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  #links::after{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #3d52a0;
+    left: 0;
+    bottom: -100%;
+    border-radius: 50%;
+    z-index: -1;
+    transition: all ease 0.4s;
+}
+#links:hover::after{
+    bottom: 0;
+    border-radius: 0;
+   
+}
+#links{
+    z-index: 10;
+    background: transparent;
+
+    cursor: pointer;
+}
+#link{
+    transition: all ease 0.4s;
+}
+.navbar {
+    top: 0;
+    left: 0;
+    background-color: white; /* Ensure it's visible */
+    z-index: 1000;
+}  
+.radley-regular {
+    font-family: "Radley", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .radley-regular-italic {
+    font-family: "Radley", serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+a{
+    font-family: radley-regular;
+    font-size: 1.6rem;
+}
+
+.loginbtn{
+    font-family: radley-regular;
+    font-size: 1.6rem; 
+}
