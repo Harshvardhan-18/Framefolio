@@ -26,10 +26,6 @@ function Form() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!currentUser) {
-      navigate('/login');
-      return;
-    }
     try {
       const db = getFirestore(app);
       const portfolioRef = collection(db, 'portfolios');
