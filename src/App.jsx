@@ -11,7 +11,8 @@ import { AuthProvider } from './context/AuthContext';
 import Form from './components/Form'
 import Template1 from './components/Template1';
 import Template2 from './components/Template2';
-import YourTemplate from './components/YourTemplate'
+import YourTemplate from './components/YourTemplate';
+import YourTemplate2 from './components/YourTemplate2';
 
 function PortfolioCreation() {
   const { userId } = useParams();
@@ -41,6 +42,7 @@ function App() {
           <Route path="/template1" element={<Template1 />} />
           <Route path="/template2" element={<Template2 />} />
           <Route path="/portfolio/:userId" element={<YourTemplate />} />
+          <Route path="/test" element={<YourTemplate2 />} />
           
         </Routes>
 

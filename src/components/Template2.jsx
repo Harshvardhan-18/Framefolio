@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Rnd } from 'react-rnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faBold, faPalette, faFont, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { db } from '../context/Firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc ,getDoc} from 'firebase/firestore';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
 function Template2() {
   const [elements, setElements] = useState([
     {
-      id: 1,
+      id: uuidv4(),
       type: 'image',
       x: 100,
       y: 100,
@@ -22,19 +24,20 @@ function Template2() {
       content: 'https://i0.wp.com/picjumbo.com/wp-content/uploads/silhouette-of-a-guy-with-a-cap-at-red-sky-sunset-free-image.jpeg?h=800&quality=80',
     },
     {
-      id: 2,
+      id: uuidv4(),
       type: 'text',
       x: 150,
       y: 150,
       width: 150,
       height: 50,
-      style: { color: 'black', fontWeight: 'normal' },
+      style: { color: 'black', fontWeight: 'normal',fontFamily: 'Arial' },
       content: 'Text',
       fontSize: 40,
     },
 
   ]);
   const [selectedImage, setSelectedImage] = useState(null);
+  
   const notify = () => toast.success("Template Saved !");
   const notify2 = () => toast.error("Failed to save template.");
 
@@ -52,12 +55,21 @@ function Template2() {
       notify2();
     }
   };
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Delete" && selectedId) {
+        handleDelete(selectedId);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [selectedId]);
 
-  const handleResize = (id, newWidth) => {
+  const handleResize = (id, newHeight) => {
     setElements((prev) =>
       prev.map((el) =>
         el.id === id
-          ? { ...el, fontSize: Math.max(12, newWidth / 5) }
+          ? { ...el, fontSize: Math.max(12, newHeight / 1.5) }
           : el
       )
     );
@@ -110,37 +122,102 @@ function Template2() {
       )
     );
   };
-
-  const handleAddImage = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setSelectedImage(reader.result);
-      const newImageElement = {
-        id: Date.now(),
-        type: 'image',
-        x: 850,
-        y: 150,
-        width: 200,
-        height: 350,
-        content: reader.result,
-        style: { border: 'none' },
-      };
-      setElements((prev) => [...prev, newImageElement]);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
+  const uploadImageToGitHub = async (file, repo, path, token) => {
+    const base64 = await fileToBase64(file);
+    const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+    
+    try {
+      const response = await axios.put(
+        url,
+        {
+          message: `Upload ${file.name}`,
+          content: base64.split(',')[1], // Remove "data:image/*;base64," prefix
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data.content.download_url; // Return the raw image URL
+    } catch (error) {
+      console.error('Error uploading image:', error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || 'Failed to upload image.');
     }
   };
+  
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  
+  const handleAddImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const repo = 'Harshvardhan-18/static-images'; // Your full repo name
+    const path = `images/${Date.now()}-${file.name}`; // Unique file name
+    const token = import.meta.env.VITE_TOKEN; // Securely manage this in the backend if possible
+  
+    try {
+      const imageUrl = await uploadImageToGitHub(file, repo, path, token);
+      const newImage = {
+        id: uuidv4(),
+        type: 'image',
+        content: imageUrl, // Use the uploaded image URL
+        x: 100,
+        y: 100,
+        width: 200,
+        height: 200,
+      };
+      setElements((prev) => [...prev, newImage]);
+    } catch (error) {
+      alert('Error uploading image: ' + error.message);
+    }
+  };
+  
+
+  const handleTextInputEfficient = (id, event) => {
+  const updatedText = event.currentTarget.textContent;
+  const element = event.currentTarget;
+
+  // Get current selection and caret position
+  const selection = window.getSelection();
+  const range = selection.getRangeAt(0);
+  const caretPosition = range.startOffset;
+
+  // Update the text content in state
+  setElements((prev) =>
+    prev.map((item) =>
+      item.id === id && item.content !== updatedText
+        ? { ...item, content: updatedText }
+        : item
+    )
+  );
+
+  // Restore the caret position
+  requestAnimationFrame(() => {
+    if (element.childNodes[0]) {
+      const newRange = document.createRange();
+      newRange.setStart(element.childNodes[0], Math.min(caretPosition, updatedText.length));
+      newRange.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }
+  });
+};
+
   const handleAddText = () => {
     const newTextElement = {
-      id: Date.now(),
+      id: uuidv4(),
       type: 'text',
       x: 850,
       y: 200,
       width: 150,
-      height: 50,
+      height: 70,
       content: 'New Text',
       fontSize: 30,
       style: { color: 'black', fontFamily: 'Arial' },
@@ -151,7 +228,7 @@ function Template2() {
 
 
   return (
-    <div style={{ height: '200vh', width: '99vw', position: 'relative', backgroundColor: '#f0f0f0' }}>
+    <div style={{ height: '200vh', width: '100vw', position: 'relative', backgroundColor: '#f0f0f0' }}>
       <button
         onClick={handleAddText}
         className="bg-green-500 bg-opacity-60 hover:bg-opacity-90 rounded-xl text-white font-mono text-sm absolute mt-2 ml-2 px-2 py-1 z-10"
@@ -191,7 +268,33 @@ function Template2() {
           minHeight={50}
           minWidth={50}
           bounds="parent"
-          onResizeStop={(e, direction, ref) => handleResize(el.id, ref.offsetWidth)}
+          onDragStop={(e, data) =>
+      setElements((prev) =>
+        prev.map((item) =>
+          item.id === el.id
+            ? { ...item, x: data.x, y: data.y }
+            : item
+        )
+      )
+    }
+     onResizeStop={(e, direction, ref, delta, position) => {
+      handleResize(el.id, ref.offsetHeight);
+      setElements((prev) =>
+        prev.map((item) =>
+          item.id === el.id
+            ? {
+                ...item,
+                width: parseFloat(ref.style.width),
+                height: parseFloat(ref.style.height),
+                x: position.x,
+                 y: position.y,
+              }
+            : item
+        )
+        
+      );
+    }}
+          
           onClick={() => setSelectedId(el.id)}
           style={{
             ...el.style,
@@ -203,7 +306,7 @@ function Template2() {
           {el.type === 'image' ? (
             <img
               src={el.content}
-              alt={`Element ${el.id}`}
+              alt={`Element${el.id}`}
               style={{
                 width: '100%',
                 height: '100%',
@@ -220,11 +323,14 @@ function Template2() {
                 fontSize: `${el.fontSize}px`,
                 margin: 0,
                 height: '100%',
+                textAlign:'left',
+                whiteSpace:'nowrap',
                 overflow: 'hidden',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: 'baseline',
+                
               }}
+              onInput={(e) => handleTextInputEfficient(el.id, e)}
             >
               {el.content}
             </h1>
