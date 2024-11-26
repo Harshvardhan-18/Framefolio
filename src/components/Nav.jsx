@@ -22,7 +22,7 @@ function Nav() {
 
 
   return (
-    <div>
+    <div className='bg-[#ede8f5]'>
       <Headroom style={{ transition: 'all 0.3s ease-in-out' }}>
         <div className='navbar w-full px-20 flex justify-between backdrop-blur-sm bg-transparent items-center  sticky z-10'>
           <div className='logo w-40 pt-0'>

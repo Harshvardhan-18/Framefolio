@@ -5,13 +5,17 @@ import { Rnd } from 'react-rnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faBold, faPalette, faFont, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { db } from '../context/Firebase';
-import { collection, addDoc ,getDoc} from 'firebase/firestore';
+import { collection, addDoc ,getDoc,setDoc,doc} from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
 
 
 function Template2() {
+  const navigate = useNavigate();
   const [elements, setElements] = useState([
     {
       id: uuidv4(),
@@ -46,15 +50,26 @@ function Template2() {
   const [selectedId, setSelectedId] = useState(null);
 
   const saveTemplate = async () => {
+    
     try {
-      const docRef = await addDoc(collection(db, 'templates'), {
-        elements,
-        timestamp: new Date(),
-      });
-      notify();
+      const auth = getAuth(); 
+      const user = auth.currentUser; 
+  
+      if (user) {
+        const userId = user.uid; 
+        await setDoc(doc(db, "templates", userId), {
+          elements,
+          timestamp: new Date(),
+        });
+        notify(); 
+        navigate(`/portfolio/${userId}`);
+      }else {
+        console.error("No user is logged in.");
+        notify2(); 
+      }
     } catch (error) {
       console.error("Error saving template: ", error);
-      notify2();
+      notify2(); 
     }
   };
   useEffect(() => {
@@ -284,6 +299,23 @@ function Template2() {
       >
         <FontAwesomeIcon icon={faPlus} /> Add video
       </button>
+      <header className="navbar1">
+            <div className="profile-container">
+              <div className="logo">Portfolio</div>
+            </div>
+            <nav>
+              <ul className="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#showreel">Work</a></li>
+
+              </ul>
+            </nav>
+            
+            <button  className="get-started-btn px-8 bg-slate-600 text-white rounded-full shadow-lg hover:bg-slate-700 transition duration-300">
+              Connect
+            </button>
+          </header>
       {showVideoPopup && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20"
@@ -339,7 +371,7 @@ function Template2() {
             width: el.width,
             height: el.height,
           }}
-          minHeight={50}
+          minHeight={30}
           minWidth={50}
           bounds="parent"
           onDragStop={(e, data) =>

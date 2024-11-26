@@ -1,7 +1,6 @@
-// LoadingSpinner.js
+
 import React from 'react';
 import './Loading.css';
-import { div } from 'framer-motion/client';
 
 function Spinner() {
   return (

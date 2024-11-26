@@ -3,6 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color:#ede8f5;
     height: 100vh;
   }
   
@@ -12,6 +13,7 @@
     border: 6px solid #f3f3f3;
     border-top: 6px solid #3498db; /* Blue spinner color */
     border-radius: 50%;
+ 
     animation: spin 1s linear infinite;
   }
   

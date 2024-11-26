@@ -41,8 +41,7 @@ function App() {
           <Route path="/form" element={<Form />} />
           <Route path="/template1" element={<Template1 />} />
           <Route path="/template2" element={<Template2 />} />
-          <Route path="/portfolio/:userId" element={<YourTemplate />} />
-          <Route path="/test" element={<YourTemplate2 />} />
+          <Route path="/portfolio/:userId" element={<YourTemplate2 />} />
           
         </Routes>
 

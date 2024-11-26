@@ -3,9 +3,12 @@ import { collection, getDoc, doc } from 'firebase/firestore';
 import { db } from '../context/Firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useParams } from 'react-router-dom';
+import Spinner from './Loading';
 
-function YourTemplate2({ templateId = "dtjZnlUVTNjpnadEkIHC" }) {
+function YourTemplate2({}) {
   const [elements, setElements] = useState([]);
+  const { userId } = useParams();
   const [loading, setLoading] = useState(false);
 
   const fetchTemplate = async (id) => {
@@ -16,12 +19,11 @@ function YourTemplate2({ templateId = "dtjZnlUVTNjpnadEkIHC" }) {
       if (docSnap.exists()) {
         return docSnap.data();
       } else {
-        toast.error("Template not found!");
+        toast.error("Portfolio not found!");
         return null;
       }
     } catch (error) {
-      console.error("Error fetching template:", error);
-      toast.error("Failed to load template.");
+      console.error("Error fetching portfolio:", error);
       return null;
     }
   };
@@ -36,17 +38,18 @@ function YourTemplate2({ templateId = "dtjZnlUVTNjpnadEkIHC" }) {
   };
 
   useEffect(() => {
-    loadTemplate(templateId);
-  }, [templateId]);
+    loadTemplate(userId);
+  }, [userId]);
 
   return (
     <div>
       <ToastContainer position="top-right" autoClose={3000} />
-
       
 
+      {loading && <div><Spinner/></div> }
+
       <div style={{ marginTop: "100px" }}>
-        
+      
         {!loading &&
           elements.map((el, index) => (
             <div
@@ -67,7 +70,7 @@ function YourTemplate2({ templateId = "dtjZnlUVTNjpnadEkIHC" }) {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) } 
-              {el.type === 'text '&&(
+              {el.type === 'text'&&(
                 <h1
                   style={{
                     color: el.style?.color || 'black',

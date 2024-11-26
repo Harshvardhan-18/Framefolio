@@ -32,10 +32,10 @@ function App() {
 
               </ul>
             </nav>
-            <a href="/form">
+            
             <button  className="get-started-btn px-8 bg-slate-600 text-white rounded-full shadow-lg hover:bg-slate-700 transition duration-300">
               Get Started
-            </button></a>
+            </button>
           </header>
 
           <div className="hero-content">
