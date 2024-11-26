@@ -4,7 +4,7 @@ import { db } from '../context/Firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function YourTemplate2({ templateId = "uFejjESb6ynsehtf7zln" }) {
+function YourTemplate2({ templateId = "dtjZnlUVTNjpnadEkIHC" }) {
   const [elements, setElements] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -60,13 +60,14 @@ function YourTemplate2({ templateId = "uFejjESb6ynsehtf7zln" }) {
                 
               }}
             >
-              {el.type === 'image' ? (
+              {el.type === 'image' && (
                 <img
                   src={el.content}
                   alt={`Template Element ${index}`}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
-              ) : (
+              ) } 
+              {el.type === 'text '&&(
                 <h1
                   style={{
                     color: el.style?.color || 'black',
@@ -78,6 +79,18 @@ function YourTemplate2({ templateId = "uFejjESb6ynsehtf7zln" }) {
                   {el.content}
                 </h1>
               )}
+              {el.type ==='video' && (
+            <iframe
+              src={el.content}
+              style={{
+              width:"100%",
+              height:"100%"}}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              
+            />
+          ) }
             </div>
           ))}
       </div>

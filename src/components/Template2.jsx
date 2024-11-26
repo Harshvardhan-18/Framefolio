@@ -37,6 +37,8 @@ function Template2() {
 
   ]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const [videoLink, setVideoLink] = useState('');
   
   const notify = () => toast.success("Template Saved !");
   const notify2 = () => toast.error("Failed to save template.");
@@ -141,8 +143,7 @@ function Template2() {
       );
       return response.data.content.download_url; // Return the raw image URL
     } catch (error) {
-      console.error('Error uploading image:', error.response?.data?.message || error.message);
-      throw new Error(error.response?.data?.message || 'Failed to upload image.');
+      toast.error('Error uploading image:');
     }
   };
   
@@ -154,30 +155,37 @@ function Template2() {
       reader.readAsDataURL(file);
     });
   
-  const handleAddImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const handleAddImage = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+    
+      if (file.size > 5 * 1024 * 1024) { // Limit to 5MB
+        toast.error('File size exceeds the 5MB limit.');
+        return;
+      }
+    
+      const repo = 'Harshvardhan-18/static-images';
+      const path = `images/${Date.now()}-${file.name}`;
+      const token = import.meta.env.VITE_TOKEN;
+    
+      try {
+        const imageUrl = await uploadImageToGitHub(file, repo, path, token);
+        const newImage = {
+          id: uuidv4(),
+          type: 'image',
+          content: imageUrl,
+          x: 100,
+          y: 100,
+          width: 200,
+          height: 200,
+        };
+        setElements((prev) => [...prev, newImage]);
+      } catch (error) {
+        toast.error('Error uploading image: ' + error.message);
+      }
+    };
+    
   
-    const repo = 'Harshvardhan-18/static-images'; // Your full repo name
-    const path = `images/${Date.now()}-${file.name}`; // Unique file name
-    const token = import.meta.env.VITE_TOKEN; // Securely manage this in the backend if possible
-  
-    try {
-      const imageUrl = await uploadImageToGitHub(file, repo, path, token);
-      const newImage = {
-        id: uuidv4(),
-        type: 'image',
-        content: imageUrl, // Use the uploaded image URL
-        x: 100,
-        y: 100,
-        width: 200,
-        height: 200,
-      };
-      setElements((prev) => [...prev, newImage]);
-    } catch (error) {
-      alert('Error uploading image: ' + error.message);
-    }
-  };
   
 
   const handleTextInputEfficient = (id, event) => {
@@ -225,6 +233,29 @@ function Template2() {
 
     setElements((prev) => [...prev, newTextElement]);
   };
+  const [videoUrl, setVideoUrl] = useState('');
+  const [embedUrl, setEmbedUrl] = useState('');
+
+  const handleEmbed = () => {
+    const videoId = videoUrl.split('v=')[1]?.split('&')[0];
+    if (videoId) {
+      const newVideo = {
+        id: uuidv4(),
+        type: 'video',
+        content: `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0`,
+        x: 100,
+        y: 100,
+        width: 300,
+        height: 200,
+      };
+      setElements((prev) => [...prev, newVideo]);
+      setShowVideoPopup(false);
+      setVideoUrl('');
+    } else {
+      toast.error('Invalid YouTube URL');
+    }
+  };
+  
 
 
   return (
@@ -246,6 +277,49 @@ function Template2() {
         onChange={handleAddImage}
         className="hidden"
       />
+      <button
+        onClick={()=>setShowVideoPopup(true)}
+        className="bg-blue-500 bg-opacity-60 hover:bg-opacity-90 rounded-xl text-white font-mono text-sm absolute mt-2 ml-[28vw] px-2 py-1 z-10"
+        style={{ cursor: 'pointer' }}
+      >
+        <FontAwesomeIcon icon={faPlus} /> Add video
+      </button>
+      {showVideoPopup && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20"
+          onClick={() => setShowVideoPopup(false)}
+        >
+          <div
+            className="bg-transparent backdrop-blur-lg border-2  p-4 rounded-lg shadow-md w-[30vw]"
+            onClick={(e) => e.stopPropagation()}
+             // Prevent closing when clicking inside
+          >
+            <h2 className="text-2xl font-bold font-serif mb-4">Add YouTube Video</h2>
+            <input
+              type="text"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="Paste YouTube link here"
+              className="w-full px-2 py-1 border-2 bg-transparent text-white font-mono rounded-lg mb-4"
+            />
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowVideoPopup(false)}
+                className="bg-red-500 hover:bg-red-600 text-white  text-lg font-serif px-3 py-1 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEmbed}
+                className="bg-green-500 hover:bg-green-60  text-white text-lg font-serif px-3 py-1 rounded"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <button
         onClick={saveTemplate}
         className="bg-blue-500 bg-opacity-60 hover:bg-opacity-90 rounded-xl text-white font-mono text-sm absolute mt-2 ml-60 px-2 py-1 z-10"
@@ -303,7 +377,7 @@ function Template2() {
             textAlign: 'left',
           }}
         >
-          {el.type === 'image' ? (
+          {el.type === 'image' && (
             <img
               src={el.content}
               alt={`Element${el.id}`}
@@ -313,8 +387,21 @@ function Template2() {
                 objectFit: 'cover',
               }}
               draggable="false"
-            />
-          ) : (
+            />) }
+            
+              {el.type ==='video' && (
+              <iframe
+                src={el.content}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                draggable="false"
+                allowFullScreen
+              />
+            ) }
+          
+          {el.type === 'text'&& (
             <h1
               contentEditable="true"
               suppressContentEditableWarning={true}

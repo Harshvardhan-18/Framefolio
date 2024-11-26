@@ -79,7 +79,7 @@ function Page2() {
                             <motion.div
                                 onHoverStart={() => handleHover(1)}
                                 onHoverEnd={() => handleHoverEnd(1)}
-                                onClick={() => handleTemplateClick("/template2")} // Use click handler for redirection
+                                onClick={() => handleTemplateClick("/template2")}
                                 className="cardcontainer  overflow-visible w-1/2 relative cursor-pointer z-9"
                             >
                                 <motion.div className="card rounded-lg h-[75vh] bg-red-500">
