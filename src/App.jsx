@@ -11,6 +11,7 @@ import { AuthProvider } from './context/AuthContext';
 import Form from './components/Form'
 import Template1 from './components/Template1';
 import Template2 from './components/Template2';
+import Template3 from './components/Template3';
 import YourTemplate from './components/YourTemplate';
 import YourTemplate2 from './components/YourTemplate2';
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/form" element={<Form />} />
           <Route path="/template1" element={<Template1 />} />
           <Route path="/template2" element={<Template2 />} />
+          <Route path="/template3" element={<Template3 />} />
           <Route path="/portfolio/:userId" element={<YourTemplate2 />} />
           
         </Routes>

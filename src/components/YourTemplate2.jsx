@@ -42,11 +42,30 @@ function YourTemplate2({}) {
   }, [userId]);
 
   return (
-    <div>
+    <div className='bg-gray-100 relative'>
       <ToastContainer position="top-right" autoClose={3000} />
+      <div className='sticky top-4 h-[300vh]'>
+      <header className="navbar1 mt-6 sticky top-4 ">
+            <div className="profile-container">
+              <div className="logo">Portfolio</div>
+            </div>
+            <nav>
+              <ul className="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#showreel">Work</a></li>
+
+              </ul>
+            </nav>
+            
+            <button  className="get-started-btn px-8 bg-slate-600 text-white rounded-full shadow-lg hover:bg-slate-700 transition duration-300">
+              Connect
+            </button>
+          </header>
       
 
       {loading && <div><Spinner/></div> }
+      
 
       <div style={{ marginTop: "100px" }}>
       
@@ -96,6 +115,7 @@ function YourTemplate2({}) {
           ) }
             </div>
           ))}
+      </div>
       </div>
     </div>
   );

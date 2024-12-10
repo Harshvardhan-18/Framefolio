@@ -15,7 +15,7 @@ import { redirect } from 'react-router-dom';
 
 
 
-function Template2() {
+function Template3() {
   const navigate = useNavigate();
   const [elements, setElements] = useState([
     {
@@ -508,4 +508,4 @@ function Template2() {
   );
 }
 
-export default Template2;
+export default Template3;
