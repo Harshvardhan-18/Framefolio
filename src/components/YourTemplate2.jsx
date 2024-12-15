@@ -44,8 +44,8 @@ function YourTemplate2({}) {
   return (
     <div className='bg-gray-100 relative'>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className='sticky top-4 h-[300vh]'>
-      <header className="navbar1 mt-6 sticky top-4 ">
+      <div className='sticky h-[300vh]'>
+      <header className="navbar1 sticky top-4 ">
             <div className="profile-container">
               <div className="logo">Portfolio</div>
             </div>

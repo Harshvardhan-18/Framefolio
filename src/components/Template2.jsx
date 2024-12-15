@@ -18,25 +18,17 @@ import { redirect } from 'react-router-dom';
 function Template2() {
   const navigate = useNavigate();
   const [elements, setElements] = useState([
-    {
-      id: uuidv4(),
-      type: 'image',
-      x: 100,
-      y: 100,
-      width: 200,
-      height: 350,
-      style: { border: 'none' },
-      content: 'https://i0.wp.com/picjumbo.com/wp-content/uploads/silhouette-of-a-guy-with-a-cap-at-red-sky-sunset-free-image.jpeg?h=800&quality=80',
-    },
+    
+    
     {
       id: uuidv4(),
       type: 'text',
-      x: 150,
-      y: 150,
-      width: 150,
+      x: 650,
+      y: 300,
+      width: 500,
       height: 50,
-      style: { color: 'black', fontWeight: 'normal', fontFamily: 'Arial' },
-      content: 'Text',
+      style: { color: 'black', fontWeight: 'bold', fontFamily: 'Georgia' },
+      content: 'Hi There!',
       fontSize: 40,
     },
 
@@ -295,7 +287,7 @@ function Template2() {
 
   return (
     <div style={{ height: '200vh', width: '98.9vw', position: 'relative', backgroundColor: '#f0f0f0' }}>
-      <div className="menu-container sticky flex top-2 mt-2 ml-[1vw] z-20">
+      <div className="menu-container sticky flex top-2  ml-[1vw] z-20">
         <SingleLevelDropdownMenu items={menuItems} />
         <button
           onClick={saveTemplate}

@@ -40,8 +40,8 @@ function App() {
 
           <div className="hero-content">
             <h1 className="hero-title text-[10rem] font-bold font-serif mt-72 text-center">Hi there!</h1>
-            <p className="hero-subtitle font-serif text-4xl font-medium text-center">Welcome to my portfolio! Let's connect and make great videos together.</p>
-          </div>
+            <p className="hero-subtitle font-serif text-4xl font-medium text-center"></p>
+          </div>Welcome to my portfolio! Let's connect and make great videos together.
         </div>
       </div>
       <div id='about' className='about text-gray-300 h-[100vh] bg-slate-600'>
